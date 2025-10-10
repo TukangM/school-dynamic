@@ -14,9 +14,7 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <a href="/" class="flex items-center space-x-3">
-                            <svg class="h-8 w-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                            <img class="h-10 w-10" src="assets/image/skansev.png" alt="SMK 7 Pekanbaru Logo">
                             <span class="font-bold text-xl">SMK 7 Pekanbaru</span>
                         </a>
                     </div>
@@ -47,10 +45,31 @@
                         </button>
                     </div>
                     
-                    <!-- Login Button -->
-                    <a href="#" class="bg-white text-[#002147] px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors duration-200">
-                        Login
-                    </a>
+                    @auth
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center space-x-2 text-white hover:bg-[#003166] px-4 py-2 rounded-md">
+                                <span>{{ Auth::user()->name }}</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                                <div class="py-1">
+                                    <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</a>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('dashboard') }}" class="bg-white text-[#002147] px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-100 transition-colors duration-200">
+                            Login
+                        </a>
+                    @endauth
                 </div>
 
                 <!-- Mobile menu button -->
