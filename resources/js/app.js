@@ -7,3 +7,4 @@ axios.get('/').then(response => console.log('Axios OK!', response.status));
 
 // Optional: jika ingin pakai zero-md (render markdown)
 import 'zero-md';
+customElements.define('zero-md', ZeroMd)
