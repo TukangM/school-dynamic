@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beranda - SMK 7 Pekanbaru</title>
-    <x-addons />
 </head>
 <body class="bg-gray-50">
     @include('components.navbar')
 
     <!-- Hero Section with Carousel -->
-    <section class="relative h-[500px] mb-8">
+    <section class="relative h-[300px] md:h-[400px] lg:h-[500px] mb-8">
         <div class="relative h-full">
-            <img src="https://via.placeholder.com/1920x500" alt="Hero image" class="w-full h-full object-cover">
-            <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/70 to-transparent">
+            <img src="assets/image/halaman.png" alt="Hero image" class="w-full h-full object-cover">
+            <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6 lg:p-8 bg-gradient-to-t from-black/70 to-transparent">
                 <div class="max-w-6xl mx-auto">
-                    <h1 class="text-4xl font-bold text-white mb-2">Welcome to SMK 7 Pekanbaru</h1>
-                    <p class="text-white/90">Discover your potential with us</p>
+                    <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">Welcome to SMK 7 Pekanbaru</h1>
+                    <p class="text-sm md:text-base text-white/90">Discover your potential with us</p>
                 </div>
             </div>
         </div>
