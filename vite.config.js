@@ -1,29 +1,27 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import tailwindcss from '@tailwindcss/vite';
-import autoprefixer from 'autoprefixer'
+import { defineConfig } from 'vite'
+import laravel from 'laravel-vite-plugin'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-    plugins: [
-        laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
-            refresh: true,
-        }),
-        tailwindcss(), autoprefixer(),
-    ],
-    server: {
-    host: '0.0.0.0', // 🔥 bind ke semua interface IPv4
+  plugins: [
+    laravel({
+      input: [
+        'resources/css/app.css',
+        'resources/js/app.js',
+        'resources/js/react/editor.jsx',
+      ],
+      refresh: true,
+    }),
+    react(),
+  ],
+  server: {
+    host: true,      // equivalent to '0.0.0.0'
     port: 5173,
-        strictPort: true,
-    allowedHosts: [
-      'localhost',
-      '127.0.0.1',
-      '192.168.1.10', // 🧠 ganti ke IP lokal kamu
-      'your-live-share-id.liveshare.vsengsaas.visualstudio.com'
-    ],
-    hmr: {
-      host: 'localhost', // 🧠 atau hostname kamu
-      protocol: 'ws',
+    strictPort: true,
+    hmr: { 
+      host: 'localhost',
+      protocol: 'ws' 
     },
+    cors: true,
   },
 })
