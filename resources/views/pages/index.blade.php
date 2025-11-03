@@ -33,7 +33,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- News Card -->
                     <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <img src="https://via.placeholder.com/400x300" alt="News image" class="w-full h-48 object-cover">
+                        <img src="https://placehold.co/400x300?font=source-sans-pro&text=Placeholder%20Example%20Bruh" alt="News image" class="w-full h-48 object-cover">
                         <div class="p-4">
                             <h3 class="font-semibold mb-2 line-clamp-2">Prestasi Siswa dalam Kompetisi Robotik Nasional</h3>
                             <p class="text-sm text-gray-600 mb-2">12 Oktober 2023</p>
@@ -76,7 +76,7 @@
             <h2 class="text-2xl font-bold mb-6">DISCOVER</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <a href="#" class="group relative overflow-hidden rounded-lg aspect-[4/3]">
-                    <img src="https://via.placeholder.com/400x300" alt="Discover" class="w-full h-full object-cover">
+                    <img src="https://placehold.co/890?font=source-sans-pro&text=Placeholder%20Example%20Bruh" alt="Discover" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent group-hover:from-black/80 transition-all">
                         <div class="absolute bottom-0 p-4">
                             <h3 class="text-white font-semibold">Fasilitas Sekolah</h3>
@@ -92,7 +92,7 @@
             <h2 class="text-2xl font-bold mb-6">STUDYING AT SMK 7 PKU</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <a href="#" class="group relative overflow-hidden rounded-lg aspect-[4/3]">
-                    <img src="https://via.placeholder.com/400x300" alt="Study" class="w-full h-full object-cover">
+                    <img src="https://placehold.co/890?font=source-sans-pro&text=Placeholder%20Example%20Bruh" alt="Study" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent group-hover:from-black/80 transition-all">
                         <div class="absolute bottom-0 p-4">
                             <h3 class="text-white font-semibold">Jurusan RPL</h3>
@@ -105,3 +105,4 @@
     </main>
 </body>
 </html>
+<zero-md src="https://raw.githubusercontent.com/Xynocode/xynocode.github.io/master/devtest.md"></zero-md>
