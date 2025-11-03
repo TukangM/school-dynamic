@@ -33,9 +33,9 @@
                 $shouldShowSubcategoriesColumn = !isset($category->custom_html) && ($hasSubcategoryFlag || $existingSubitems > 0);
             @endphp
 
-            <div id="main-grid" class="relative grid grid-cols-1 lg:grid-cols-10 gap-6">
-                <!-- Left Column: Main Form (70% or 100% animated) -->
-                <div id="category-form-column" class="transition-all duration-300 ease-in-out {{ $shouldShowSubcategoriesColumn ? 'lg:col-span-7' : 'lg:col-span-10' }}">
+            <div class="relative">
+                <!-- Main Form Container (100% → 70% animated) -->
+                <div id="category-form-column" class="relative z-10 transition-all duration-300 ease-in-out {{ $shouldShowSubcategoriesColumn ? 'lg:w-[68%]' : 'w-full' }}">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="mb-6">
                             <h2 class="text-2xl font-bold text-gray-900">
@@ -158,13 +158,13 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Subcategories Management (Always 30%, hidden behind form when inactive) -->
+                <!-- Subcategories Overlay (Behind form, slides from LEFT on desktop, fade on mobile) -->
                 @if(!isset($category->custom_html))
                 <div
                     id="subcategories-column"
-                    class="lg:col-span-3 transition-all duration-300 ease-in-out {{ $shouldShowSubcategoriesColumn ? 'opacity-100 z-10' : 'opacity-0 -z-10' }}"
+                    class="static lg:absolute lg:top-0 lg:right-0 h-auto lg:h-full w-full lg:w-[30%] transition-all duration-300 ease-in-out {{ $shouldShowSubcategoriesColumn ? 'lg:translate-x-0 opacity-100 z-0' : 'lg:-translate-x-full opacity-0 -z-10 pointer-events-none' }}"
                 >
-                    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6 lg:sticky lg:top-6">
+                    <div class="bg-white rounded-lg shadow-xl border border-gray-200 p-6 h-full lg:h-auto lg:sticky lg:top-6 overflow-y-auto">
                         <div class="mb-4">
                             <h3 class="text-lg font-medium text-gray-900">Subcategories</h3>
                             <p class="text-sm text-gray-500 mt-1">Manage dropdown items</p>
@@ -338,21 +338,21 @@
             const shouldShowColumn = (checkbox && checkbox.checked) || Boolean(hasExistingItems);
 
             if (shouldShowColumn) {
-                // Show subcategories column (bring to front)
-                subcategoriesColumn.classList.remove('opacity-0', '-z-10');
-                subcategoriesColumn.classList.add('opacity-100', 'z-10');
+                // Show subcategories - slide from LEFT (desktop), fade (mobile)
+                subcategoriesColumn.classList.remove('lg:-translate-x-full', 'opacity-0', '-z-10', 'pointer-events-none');
+                subcategoriesColumn.classList.add('lg:translate-x-0', 'opacity-100', 'z-0');
                 
-                // Form to 70%
-                categoryFormColumn.classList.remove('lg:col-span-10');
-                categoryFormColumn.classList.add('lg:col-span-7');
+                // Shrink form to 70%
+                categoryFormColumn.classList.remove('w-full');
+                categoryFormColumn.classList.add('lg:w-[68%]');
             } else {
-                // Hide subcategories column (send to back)
-                subcategoriesColumn.classList.remove('opacity-100', 'z-10');
-                subcategoriesColumn.classList.add('opacity-0', '-z-10');
+                // Hide subcategories - slide to LEFT (desktop), fade (mobile)
+                subcategoriesColumn.classList.remove('lg:translate-x-0', 'opacity-100', 'z-0');
+                subcategoriesColumn.classList.add('lg:-translate-x-full', 'opacity-0', '-z-10', 'pointer-events-none');
                 
-                // Form to 100%
-                categoryFormColumn.classList.remove('lg:col-span-7');
-                categoryFormColumn.classList.add('lg:col-span-10');
+                // Expand form to 100%
+                categoryFormColumn.classList.remove('lg:w-[68%]');
+                categoryFormColumn.classList.add('w-full');
             }
 
             if (addFormContainer) {
