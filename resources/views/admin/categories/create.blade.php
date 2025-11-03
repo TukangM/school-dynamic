@@ -26,8 +26,8 @@
             @endphp
 
             <div id="main-grid" class="relative grid grid-cols-1 lg:grid-cols-10 gap-6">
-                <!-- Left Column: Main Form (Always 70%) -->
-                <div id="category-form-column" class="lg:col-span-7 transition-all duration-300 ease-in-out">
+                <!-- Left Column: Main Form (70% or 100% animated) -->
+                <div id="category-form-column" class="transition-all duration-300 ease-in-out {{ $showSubcategoriesPreview ? 'lg:col-span-7' : 'lg:col-span-10' }}">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                         <div class="mb-6">
                             <h2 class="text-2xl font-bold text-gray-900">
@@ -186,8 +186,9 @@
             const checkbox = document.getElementById('subcategories');
             const pathField = document.getElementById('path');
             const previewColumn = document.getElementById('subcategories-preview');
+            const categoryFormColumn = document.getElementById('category-form-column');
             
-            if (!checkbox || !previewColumn) {
+            if (!checkbox || !previewColumn || !categoryFormColumn) {
                 return;
             }
 
@@ -196,6 +197,10 @@
                 previewColumn.classList.remove('opacity-0', '-z-10');
                 previewColumn.classList.add('opacity-100', 'z-10');
                 
+                // Form to 70%
+                categoryFormColumn.classList.remove('lg:col-span-10');
+                categoryFormColumn.classList.add('lg:col-span-7');
+                
                 pathField.disabled = true;
                 pathField.value = '';
                 pathField.classList.add('bg-gray-100', 'cursor-not-allowed', 'text-gray-500');
@@ -203,6 +208,10 @@
                 // Hide preview column (send to back)
                 previewColumn.classList.remove('opacity-100', 'z-10');
                 previewColumn.classList.add('opacity-0', '-z-10');
+                
+                // Form to 100%
+                categoryFormColumn.classList.remove('lg:col-span-7');
+                categoryFormColumn.classList.add('lg:col-span-10');
                 
                 pathField.disabled = false;
                 pathField.classList.remove('bg-gray-100', 'cursor-not-allowed', 'text-gray-500');

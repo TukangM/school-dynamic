@@ -327,10 +327,11 @@
             const pathField = document.getElementById('path');
             const subcategoriesColumn = document.getElementById('subcategories-column');
             const addFormContainer = document.getElementById('add-form-container');
+            const categoryFormColumn = document.getElementById('category-form-column');
             const subcategoriesList = document.getElementById('subcategories-list');
             const hasExistingItems = subcategoriesList && subcategoriesList.querySelector('[data-subitem="true"]');
 
-            if (!subcategoriesColumn) {
+            if (!subcategoriesColumn || !categoryFormColumn) {
                 return;
             }
 
@@ -340,10 +341,18 @@
                 // Show subcategories column (bring to front)
                 subcategoriesColumn.classList.remove('opacity-0', '-z-10');
                 subcategoriesColumn.classList.add('opacity-100', 'z-10');
+                
+                // Form to 70%
+                categoryFormColumn.classList.remove('lg:col-span-10');
+                categoryFormColumn.classList.add('lg:col-span-7');
             } else {
                 // Hide subcategories column (send to back)
                 subcategoriesColumn.classList.remove('opacity-100', 'z-10');
                 subcategoriesColumn.classList.add('opacity-0', '-z-10');
+                
+                // Form to 100%
+                categoryFormColumn.classList.remove('lg:col-span-7');
+                categoryFormColumn.classList.add('lg:col-span-10');
             }
 
             if (addFormContainer) {
