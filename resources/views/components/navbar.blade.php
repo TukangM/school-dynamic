@@ -14,7 +14,7 @@
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
                         <a href="/" class="flex items-center space-x-3">
-                            <img class="h-8 w-6" src="assets/image/skansev.png" alt="SMK 7 Pekanbaru Logo">
+                            <img class="h-8 w-6" src="{{ asset('assets/image/skansev.png') }}" alt="SMK 7 Pekanbaru Logo">
                             <span class="font-bold text-xl">SMK 7 Pekanbaru</span>
                         </a>
                     </div>

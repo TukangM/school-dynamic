@@ -10,11 +10,25 @@ export default defineConfig({
       input: [
         'resources/css/app.css',
         'resources/js/app.js',
+        'resources/react/ArticleEditor.jsx',
       ],
       refresh: true,
     }),
     react(),
   ],
+  build: {
+    chunkSizeWarningLimit: 1200, // Increase to 1000 kB (default 500 kB)
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split vendor libraries into separate chunks
+          'react-vendor': ['react', 'react-dom'],
+          'editor-vendor': ['@uiw/react-md-editor', 'rehype-sanitize'],
+          'zero-md-vendor': ['zero-md'],
+        },
+      },
+    },
+  },
   server: {
     host: true,
     port: 5173,

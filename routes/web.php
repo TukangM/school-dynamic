@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Models\CategoryNavbar;
 
 Route::get('/', function () {
@@ -31,6 +33,10 @@ Route::get('/navbar-preview', function () {
 Route::get('/test-preview', function () {
     return view('test');
 });
+
+// Public Articles Routes (URLs under /articles). We serve files from /storage to avoid public/articles folder conflicts.
+Route::get('/articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('/articles/{slug}', [ArticleController::class, 'show'])->name('articles.show');
 
 // Auth Routes
 Route::get('/login', function () {
@@ -83,10 +89,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::put('/categories/home/{id}', [CategoryController::class, 'updateHome'])->name('categories.update-home');
     Route::delete('/categories/home/{id}', [CategoryController::class, 'destroyHome'])->name('categories.destroy-home');
     
-    // Articles (placeholder routes for future)
-    Route::get('/articles', function () {
-        return 'Articles Index - Coming Soon';
-    })->name('articles.index');
+    // Articles Management
+    Route::get('/articles', [AdminArticleController::class, 'index'])->name('articles.index');
+    Route::get('/articles/create', [AdminArticleController::class, 'create'])->name('articles.create');
+    Route::post('/articles', [AdminArticleController::class, 'store'])->name('articles.store');
+    Route::get('/articles/{id}/edit', [AdminArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('/articles/{id}', [AdminArticleController::class, 'update'])->name('articles.update');
+    Route::delete('/articles/{id}', [AdminArticleController::class, 'destroy'])->name('articles.destroy');
     
     // Users (admin only, placeholder routes for future)
     Route::get('/users', function () {
