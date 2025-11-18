@@ -14,7 +14,7 @@ class CategoryController extends Controller
     public function index()
     {
         $navbarCategories = CategoryNavbar::with('subItems')->orderBy('order')->get();
-        $homeCategories = CategoryHome::orderBy('order')->get();
+        $homeCategories = CategoryHome::with('articles')->orderBy('order')->get();
         
         return view('admin.categories.index', compact('navbarCategories', 'homeCategories'));
     }

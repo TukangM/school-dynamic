@@ -8,16 +8,11 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ArticleController as AdminArticleController;
 use App\Models\CategoryNavbar;
 
-Route::get('/', function () {
-    $navbarCategories = CategoryNavbar::active()
-        ->ordered()
-        ->with(['subItems' => function($query) {
-            $query->where('is_active', 1)->orderBy('order');
-        }])
-        ->get();
-    
-    return view('pages.index', compact('navbarCategories'));
-});
+// Homepage with dynamic categories
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Category page
+Route::get('/category/{slug}', [\App\Http\Controllers\HomeController::class, 'showCategory'])->name('category.show');
 
 Route::get('/navbar-preview', function () {
     $navbarCategories = CategoryNavbar::active()
@@ -67,27 +62,37 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     
     // Navbar Categories
-    Route::get('/categories/navbar/create', function() {
-        return view('admin.categories.create', ['type' => 'navbar']);
-    })->name('categories.create-navbar');
-    Route::post('/categories/navbar', [CategoryController::class, 'storeNavbar'])->name('categories.store-navbar');
-    Route::get('/categories/navbar/{id}/edit', [CategoryController::class, 'editNavbar'])->name('categories.edit-navbar');
-    Route::put('/categories/navbar/{id}', [CategoryController::class, 'updateNavbar'])->name('categories.update-navbar');
-    Route::delete('/categories/navbar/{id}', [CategoryController::class, 'destroyNavbar'])->name('categories.destroy-navbar');
+    Route::prefix('categories/navbar')->name('categories.navbar.')->group(function() {
+        Route::get('/create', function() {
+            return view('admin.categories.create', ['type' => 'navbar']);
+        })->name('create');
+        Route::post('/', [CategoryController::class, 'storeNavbar'])->name('store');
+        Route::get('/{id}/edit', [CategoryController::class, 'editNavbar'])->name('edit');
+        Route::put('/{id}', [CategoryController::class, 'updateNavbar'])->name('update');
+        Route::delete('/{id}', [CategoryController::class, 'destroyNavbar'])->name('destroy');
+    });
     
     // Subcategories Management
     Route::post('/subcategories', [CategoryController::class, 'storeSubcategory'])->name('subcategories.store');
     Route::put('/subcategories/{id}', [CategoryController::class, 'updateSubcategory'])->name('subcategories.update');
     Route::delete('/subcategories/{id}', [CategoryController::class, 'destroySubcategory'])->name('subcategories.destroy');
     
-    // Home Categories
-    Route::get('/categories/home/create', function() {
-        return view('admin.categories.create', ['type' => 'home']);
-    })->name('categories.create-home');
-    Route::post('/categories/home', [CategoryController::class, 'storeHome'])->name('categories.store-home');
-    Route::get('/categories/home/{id}/edit', [CategoryController::class, 'editHome'])->name('categories.edit-home');
-    Route::put('/categories/home/{id}', [CategoryController::class, 'updateHome'])->name('categories.update-home');
-    Route::delete('/categories/home/{id}', [CategoryController::class, 'destroyHome'])->name('categories.destroy-home');
+    // Home Categories Management (NEW)
+    Route::prefix('categories/home')->name('categories.home.')->group(function() {
+        Route::get('/create', [\App\Http\Controllers\Admin\CategoryHomeController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\CategoryHomeController::class, 'store'])->name('store');
+        Route::get('/{category}/edit', [\App\Http\Controllers\Admin\CategoryHomeController::class, 'edit'])->name('edit');
+        Route::put('/{category}', [\App\Http\Controllers\Admin\CategoryHomeController::class, 'update'])->name('update');
+        Route::delete('/{category}', [\App\Http\Controllers\Admin\CategoryHomeController::class, 'destroy'])->name('destroy');
+        Route::post('/reorder', [\App\Http\Controllers\Admin\CategoryHomeController::class, 'reorder'])->name('reorder');
+        
+        // Article Management within Category
+        Route::get('/{category}/articles', [\App\Http\Controllers\Admin\CategoryArticleController::class, 'index'])->name('articles.index');
+        Route::post('/{category}/articles/add', [\App\Http\Controllers\Admin\CategoryArticleController::class, 'add'])->name('articles.add');
+        Route::delete('/{category}/articles/{article}', [\App\Http\Controllers\Admin\CategoryArticleController::class, 'remove'])->name('articles.remove');
+        Route::post('/{category}/articles/reorder', [\App\Http\Controllers\Admin\CategoryArticleController::class, 'reorder'])->name('articles.reorder');
+        Route::post('/{category}/articles/max', [\App\Http\Controllers\Admin\CategoryArticleController::class, 'updateMaxArticles'])->name('articles.max');
+    });
     
     // Articles Management
     Route::get('/articles', [AdminArticleController::class, 'index'])->name('articles.index');

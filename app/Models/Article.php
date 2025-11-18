@@ -111,4 +111,14 @@ class Article extends Model
     {
         $this->increment('views');
     }
+
+    /**
+     * Home categories (many-to-many)
+     */
+    public function homeCategories()
+    {
+        return $this->belongsToMany(CategoryHome::class, 'category_article', 'article_id', 'category_id')
+                    ->withPivot('order')
+                    ->withTimestamps();
+    }
 }

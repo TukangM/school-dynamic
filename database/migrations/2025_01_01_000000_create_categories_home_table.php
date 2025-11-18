@@ -12,9 +12,12 @@ return new class extends Migration
             $table->id();
             $table->string('display_name');
             $table->string('idpath')->unique();
+            $table->string('slug')->unique();
+            $table->text('description')->nullable();
             $table->text('custom_html')->nullable();
             $table->string('path')->nullable();
             $table->integer('order')->default(0);
+            $table->integer('max_articles')->default(2);
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });

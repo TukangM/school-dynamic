@@ -22,86 +22,61 @@
     </section>
 
     <main class="max-w-6xl mx-auto px-4">
-        <!-- News & Events Section -->
-        <div class="flex flex-col lg:flex-row gap-8 mb-12">
-            <!-- News Section -->
-            <div class="lg:w-2/3">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold">NEWS</h2>
-                    <a href="#" class="text-blue-600 hover:underline text-sm">All News</a>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- News Card -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <img src="https://placehold.co/400x300?font=source-sans-pro&text=Placeholder%20Example%20Bruh" alt="News image" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h3 class="font-semibold mb-2 line-clamp-2">Prestasi Siswa dalam Kompetisi Robotik Nasional</h3>
-                            <p class="text-sm text-gray-600 mb-2">12 Oktober 2023</p>
-                            <p class="text-sm text-gray-500 line-clamp-3">Tim robotik SMK 7 Pekanbaru berhasil meraih juara pertama dalam kompetisi...</p>
-                        </div>
-                    </div>
-                    <!-- Repeat news cards -->
-                </div>
-            </div>
-
-            <!-- Events Section -->
-            <div class="lg:w-1/3">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold">EVENTS</h2>
-                    <a href="#" class="text-blue-600 hover:underline text-sm">All Events</a>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="space-y-4">
-                        <!-- Event Item -->
-                        <div class="border-b border-gray-100 pb-4">
-                            <div class="flex gap-4">
-                                <div class="text-center">
-                                    <div class="text-2xl font-bold text-blue-600">15</div>
-                                    <div class="text-sm text-gray-500">OCT</div>
-                                </div>
-                                <div>
-                                    <h3 class="font-semibold">Open House 2023</h3>
-                                    <p class="text-sm text-gray-500">Aula SMK 7 Pekanbaru</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Repeat event items -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Discover Section -->
+        <!-- Dynamic Category Sections -->
+        @foreach($categories as $category)
+        @if($category->is_active && $category->articles->count() > 0)
         <section class="mb-12">
-            <h2 class="text-2xl font-bold mb-6">DISCOVER</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <a href="#" class="group relative overflow-hidden rounded-lg aspect-[4/3]">
-                    <img src="https://placehold.co/890?font=source-sans-pro&text=Placeholder%20Example%20Bruh" alt="Discover" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent group-hover:from-black/80 transition-all">
-                        <div class="absolute bottom-0 p-4">
-                            <h3 class="text-white font-semibold">Fasilitas Sekolah</h3>
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold">{{ strtoupper($category->display_name) }}</h2>
+                    @if($category->description)
+                    <p class="text-sm text-gray-600 mt-1">{{ $category->description }}</p>
+                    @endif
+                </div>
+                @if($category->has_more)
+                <a href="{{ route('category.show', $category->slug) }}" 
+                   class="text-blue-600 hover:text-blue-800 hover:underline text-sm font-medium">
+                    View All
+                </a>
+                @endif
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                @foreach($category->articles as $article)
+                <a href="{{ route('articles.show', $article->slug) }}" class="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <!-- Article Image -->
+                    <div class="relative h-48 overflow-hidden">
+                        @if($article->cover_image_url)
+                        <img src="{{ $article->cover_image_url }}" 
+                             alt="{{ $article->title }}"
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        @else
+                        <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
                         </div>
+                        @endif
+                    </div>
+
+                    <!-- Article Content -->
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                            {{ $article->title }}
+                        </h3>
+                        <p class="text-xs text-gray-500 mb-2">
+                            {{ $article->created_at->format('d M Y') }}
+                        </p>
+                        <p class="text-sm text-gray-600 line-clamp-3">
+                            {{ $article->excerpt }}
+                        </p>
                     </div>
                 </a>
-                <!-- Repeat discover items -->
+                @endforeach
             </div>
         </section>
-
-        <!-- Study Section -->
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold mb-6">STUDYING AT SMK 7 PKU</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                <a href="#" class="group relative overflow-hidden rounded-lg aspect-[4/3]">
-                    <img src="https://placehold.co/890?font=source-sans-pro&text=Placeholder%20Example%20Bruh" alt="Study" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent group-hover:from-black/80 transition-all">
-                        <div class="absolute bottom-0 p-4">
-                            <h3 class="text-white font-semibold">Jurusan RPL</h3>
-                        </div>
-                    </div>
-                </a>
-                <!-- Repeat study items -->
-            </div>
-        </section>
+        @endif
+        @endforeach
     </main>
 </body>
 </html>

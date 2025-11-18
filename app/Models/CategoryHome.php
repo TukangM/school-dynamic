@@ -11,9 +11,12 @@ class CategoryHome extends Model
     protected $fillable = [
         'display_name',
         'idpath',
+        'slug',
+        'description',
         'custom_html',
         'path',
         'order',
+        'max_articles',
         'is_active'
     ];
 
@@ -29,5 +32,16 @@ class CategoryHome extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('order');
+    }
+
+    /**
+     * Articles dalam kategori ini (many-to-many)
+     */
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class, 'category_article', 'category_id', 'article_id')
+                    ->withPivot('order')
+                    ->withTimestamps()
+                    ->orderBy('category_article.order');
     }
 }
