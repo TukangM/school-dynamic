@@ -78,6 +78,6 @@
         @endif
         @endforeach
     </main>
+    @include('components.footer')
 </body>
 </html>
-<zero-md src="https://raw.githubusercontent.com/Xynocode/xynocode.github.io/master/devtest.md"></zero-md>

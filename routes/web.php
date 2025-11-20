@@ -50,9 +50,7 @@ Route::get('/logout', function () {
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
-    Route::get('/', function () {
-        return view('admin.index');
-    })->name('dashboard');
+    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     
     Route::get('/dashboard', function () {
         return redirect()->route('admin.dashboard');

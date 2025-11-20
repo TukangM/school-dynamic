@@ -92,5 +92,6 @@
         </div>
         @endif
     </main>
+    @include('components.footer')
 </body>
 </html>
