@@ -99,6 +99,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/articles/{id}/edit', [AdminArticleController::class, 'edit'])->name('articles.edit');
     Route::put('/articles/{id}', [AdminArticleController::class, 'update'])->name('articles.update');
     Route::delete('/articles/{id}', [AdminArticleController::class, 'destroy'])->name('articles.destroy');
+    Route::post('/articles/{id}/delete-cover', [AdminArticleController::class, 'deleteCover'])->name('articles.delete-cover');
+    
+    // Article Image Upload
+    Route::post('/articles/upload-image', [\App\Http\Controllers\Admin\ArticleImageController::class, 'uploadTemp'])->name('articles.upload-image');
+    Route::post('/articles/cleanup-temp', [\App\Http\Controllers\Admin\ArticleImageController::class, 'cleanupTemp'])->name('articles.cleanup-temp');
     
     // Users (admin only, placeholder routes for future)
     Route::get('/users', function () {

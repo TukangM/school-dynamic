@@ -38,7 +38,7 @@
                             </p>
                         </div>
 
-                        <form action="{{ request('type') === 'home' ? route('admin.categories.store-home') : route('admin.categories.store-navbar') }}" method="POST">
+                        <form action="{{ request('type') === 'home' ? route('admin.categories.home.store') : route('admin.categories.navbar.store') }}" method="POST">
                             @csrf
                             
                             <div class="space-y-6">

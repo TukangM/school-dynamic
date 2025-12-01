@@ -1,0 +1,140 @@
+export class ArticleImageUploader {
+    constructor(editorElement, uploadUrl) {
+        this.editorElement = editorElement;
+        this.uploadUrl = uploadUrl;
+        this.isUploading = false;
+        this.init();
+    }
+
+    init() {
+        // Setup paste listener
+        this.setupPasteListener();
+        
+        // Create upload button
+        this.createUploadButton();
+    }
+
+    setupPasteListener() {
+        document.addEventListener('paste', (event) => {
+            if (!this.editorElement.contains(document.activeElement)) {
+                return;
+            }
+
+            const items = event.clipboardData.items;
+            for (let item of items) {
+                if (item.kind === 'file' && item.type.startsWith('image/')) {
+                    event.preventDefault();
+                    const file = item.getAsFile();
+                    this.uploadImage(file);
+                    break;
+                }
+            }
+        });
+    }
+
+    createUploadButton() {
+        const container = document.querySelector('[data-field-name="content"]')?.parentElement;
+        if (!container) return;
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.id = 'image-upload-btn';
+        button.className = 'mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center gap-2';
+        button.innerHTML = `
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add Image (or Ctrl+V)
+        `;
+        button.addEventListener('click', () => this.triggerFileInput());
+        
+        container.appendChild(button);
+        
+        // Hidden file input
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.id = 'article-image-input';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                this.uploadImage(e.target.files[0]);
+                e.target.value = '';
+            }
+        });
+        
+        document.body.appendChild(fileInput);
+    }
+
+    triggerFileInput() {
+        document.getElementById('article-image-input').click();
+    }
+
+    async uploadImage(file) {
+        if (this.isUploading) {
+            alert('Image is still uploading. Please wait...');
+            return;
+        }
+
+        this.isUploading = true;
+        const button = document.getElementById('image-upload-btn');
+        const originalText = button.innerHTML;
+        button.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Uploading...';
+        button.disabled = true;
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+            const response = await fetch(this.uploadUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const data = await response.json();
+            
+            if (data.success) {
+                this.insertMarkdownToEditor(data.markdown);
+            } else {
+                alert('Upload failed: ' + (data.message || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error uploading image: ' + error.message);
+        } finally {
+            this.isUploading = false;
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }
+    }
+
+    insertMarkdownToEditor(markdown) {
+        const editor = document.querySelector('textarea[name="content"]') || 
+                      document.querySelector('[contenteditable="true"]');
+        
+        if (editor) {
+            if (editor.tagName === 'TEXTAREA') {
+                const start = editor.selectionStart;
+                const end = editor.selectionEnd;
+                const text = editor.value;
+                
+                editor.value = text.substring(0, start) + '\n' + markdown + '\n' + text.substring(end);
+                editor.selectionStart = editor.selectionEnd = start + markdown.length + 2;
+                editor.focus();
+                
+                editor.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+    }
+}
+
+// Export untuk penggunaan langsung
+window.ArticleImageUploader = ArticleImageUploader;

@@ -46,7 +46,7 @@
                             </p>
                         </div>
 
-                        <form action="{{ isset($category->custom_html) ? route('admin.categories.update-home', $category->id) : route('admin.categories.update-navbar', $category->id) }}" method="POST">
+                        <form action="{{ isset($category->custom_html) ? route('admin.categories.home.update', $category->id) : route('admin.categories.navbar.update', $category->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             

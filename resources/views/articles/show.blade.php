@@ -10,6 +10,11 @@
             display: block;
             max-width: 100%;
         }
+
+        /* Photo Viewer Image Fade Transition */
+        #photo-viewer-image {
+            transition: opacity 0.15s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -153,5 +158,8 @@
         @endif
     </div>
     @include('components.footer')
+    
+    <!-- Photo Viewer Script -->
+    <script src="{{ asset('js/photoviewer_tailwindcss.js') }}"></script>
 </body>
 </html>

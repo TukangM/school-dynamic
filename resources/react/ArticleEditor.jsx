@@ -14,6 +14,26 @@ export default function ArticleEditor({ initialContent = '', contentFieldName = 
   const editorRef = useRef();
   const isScrollingPreview = useRef(false);
 
+  // Expose insertMarkdown method globally for external code (image uploader)
+  useEffect(() => {
+    window.insertMarkdownToEditor = (markdown) => {
+      setValue(prev => {
+        const newValue = prev + '\n' + markdown + '\n';
+        console.log('✅ Markdown inserted to editor:', markdown);
+        console.log('📄 New editor content length:', newValue.length);
+        return newValue;
+      });
+    };
+    
+    // Also expose getter for current editor value
+    window.getEditorValue = () => value;
+    
+    return () => {
+      delete window.insertMarkdownToEditor;
+      delete window.getEditorValue;
+    };
+  }, [value]);
+
   // Auto-scroll smooth when user starts typing (only from editor, not preview)
   useEffect(() => {
     if (shouldScroll && editorRef.current && !isScrollingPreview.current) {
