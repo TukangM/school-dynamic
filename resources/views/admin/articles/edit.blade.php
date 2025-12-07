@@ -144,12 +144,16 @@
                             <label for="published_at" class="block text-sm font-semibold text-gray-700 mb-2">
                                 Publish Date
                                 <span class="text-gray-400 font-normal">(Optional)</span>
+                                @if(auth()->user()->role === 'author')
+                                <span class="text-xs text-gray-500 font-normal">(Admin only)</span>
+                                @endif
                             </label>
                             <input type="datetime-local" 
                                    name="published_at" 
                                    id="published_at" 
                                    value="{{ old('published_at', $article->published_at ? $article->published_at->format('Y-m-d\TH:i') : '') }}"
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002147] focus:border-transparent @error('published_at') border-red-500 @enderror">
+                                   @if(auth()->user()->role === 'author') disabled @endif
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002147] focus:border-transparent @if(auth()->user()->role === 'author') bg-gray-100 cursor-not-allowed text-gray-500 @endif @error('published_at') border-red-500 @enderror">
                             <p class="mt-1 text-xs text-gray-500">Leave empty to publish immediately</p>
                             @error('published_at')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -158,17 +162,18 @@
 
                         <!-- Active Status -->
                         <div class="lg:col-span-2">
-                            <label class="flex items-center gap-3 cursor-pointer group">
+                            <label class="flex items-center gap-3 @if(auth()->user()->role === 'author') cursor-not-allowed @else cursor-pointer @endif group">
                                 <input type="hidden" name="is_active" value="0">
                                 <input type="checkbox" 
                                        name="is_active" 
                                        id="is_active" 
                                        value="1"
+                                       @if(auth()->user()->role === 'author') disabled @endif
                                        {{ old('is_active', $article->is_active) ? 'checked' : '' }}
-                                       class="w-5 h-5 text-[#002147] border-gray-300 rounded focus:ring-2 focus:ring-[#002147]">
+                                       class="w-5 h-5 text-[#002147] border-gray-300 rounded focus:ring-2 focus:ring-[#002147] @if(auth()->user()->role === 'author') cursor-not-allowed opacity-50 @endif">
                                 <div>
-                                    <span class="text-sm font-semibold text-gray-700 group-hover:text-gray-900">Make this article active</span>
-                                    <p class="text-xs text-gray-500">Active articles will be visible to the public</p>
+                                    <span class="text-sm font-semibold @if(auth()->user()->role === 'author') text-gray-500 @else text-gray-700 group-hover:text-gray-900 @endif">Make this article active</span>
+                                    <p class="text-xs text-gray-500">@if(auth()->user()->role === 'author') Admin only - Articles are submitted for review @else Active articles will be visible to the public @endif</p>
                                 </div>
                             </label>
                         </div>

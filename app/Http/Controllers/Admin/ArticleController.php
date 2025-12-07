@@ -78,6 +78,11 @@ class ArticleController extends Controller
             $coverImageFileName = $this->findFirstValidCoverImage($content, $disk);
         }
 
+        // For author role: published_at and is_active are always false (not published)
+        $user = Auth::user();
+        $publishedAt = $user->role === 'author' ? null : ($validated['published_at'] ?? now());
+        $isActive = $user->role === 'author' ? false : ($validated['is_active'] ?? true);
+
         // Create article record
         $article = Article::create([
             'title' => $validated['title'],
@@ -86,8 +91,8 @@ class ArticleController extends Controller
             'excerpt' => $validated['excerpt'],
             'cover_image' => $coverImageFileName,
             'author_id' => Auth::id(),
-            'published_at' => $validated['published_at'] ?? now(),
-            'is_active' => $validated['is_active'] ?? true,
+            'published_at' => $publishedAt,
+            'is_active' => $isActive,
         ]);
 
         return redirect()
@@ -157,13 +162,18 @@ class ArticleController extends Controller
             $coverImageFileName = $this->findFirstValidCoverImage($content, $disk, $baseDir);
         }
 
+        // For author role: preserve original published_at and is_active values
+        $user = Auth::user();
+        $publishedAt = $user->role === 'author' ? $article->published_at : ($validated['published_at'] ?? $article->published_at);
+        $isActive = $user->role === 'author' ? $article->is_active : ($validated['is_active'] ?? $article->is_active);
+
         // Update article record
         $article->update([
             'title' => $validated['title'],
             'excerpt' => $validated['excerpt'],
             'cover_image' => $coverImageFileName,
-            'published_at' => $validated['published_at'] ?? $article->published_at,
-            'is_active' => $validated['is_active'] ?? $article->is_active,
+            'published_at' => $publishedAt,
+            'is_active' => $isActive,
         ]);
 
         return redirect()
