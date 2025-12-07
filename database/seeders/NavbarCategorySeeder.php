@@ -151,12 +151,12 @@ class NavbarCategorySeeder extends Seeder
             'is_active' => true
         ]);
 
-        // 5. PPDB (no subcategories)
+        // 5. Artikel (no subcategories)
         CategoryNavbar::create([
-            'display_name' => 'PPDB',
-            'idpath' => $makeId('PPDB'),
+            'display_name' => 'Artikel',
+            'idpath' => $makeId('Artikel'),
             'subcategories' => false,
-            'path' => '/ppdb',
+            'path' => '/articles',
             'order' => 5,
             'is_active' => true
         ]);

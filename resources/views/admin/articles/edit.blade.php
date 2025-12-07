@@ -556,7 +556,7 @@
 
                     if (data.success) {
                         const markdownCode = data.markdown;
-                        const htmlCode = `<img src="${data.url}" alt="${file.name}" />`;
+                        const htmlCode = `<img src="${data.url}" alt="${file.name}" width="75%" />`;
                         
                         this.addImageCard(markdownCode, htmlCode, data.url, file.name);
                         this.showResults();
